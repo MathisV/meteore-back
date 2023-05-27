@@ -5,6 +5,8 @@ import logger from 'morgan';
 
 import indexRouter from './routes/index.js';
 import usersRouter from './routes/users.js';
+import weatherRouter from './routes/weather.js';
+import forecastRouter from './routes/forecast.js';
 
 var app = express();
 
@@ -16,5 +18,7 @@ app.use(express.static('./public'));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/weather', weatherRouter);
+app.use('/forecast', forecastRouter);
 
 export default app;
