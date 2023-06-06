@@ -4,6 +4,7 @@ export const getWeatherData = (data) => ({
     humidity: data.main.humidity,
     windSpeed: data.wind.speed,
     description: data.weather[0].description,
+    icon: data.weather[0].icon,
 });
 
 export const getForecastData = (data) => data.list.map(item => ({
@@ -13,6 +14,7 @@ export const getForecastData = (data) => data.list.map(item => ({
     humidity: item.main.humidity,
     windSpeed: item.wind.speed,
     description: item.weather[0].description,
+    icon: item.weather[0].icon,
 }));
 
 export const handleError = (res, error) => {

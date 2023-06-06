@@ -7,16 +7,14 @@ dotenv.config('../.env');
 
 var router = express.Router();
 const OPENWEATHERMAP_API_KEY = process.env.OPENWEATHERMAP_API_KEY;
-const GEOCODE_GOOGLE_API_KEY = process.env.GEOCODE_GOOGLE_API_KEY;
 
 router.get('/city/:city/:countyCode', async (req, res) => {
     const { city, countryCode } = req.params;
     try {
-        const geoCodeResponse = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?address=${city},${countryCode}&key=${GEOCODE_GOOGLE_API_KEY}`);
-        console.log(geoCodeResponse.data.results[0])
-        const { lat, lng } = geoCodeResponse.data.results[0].geometry.location;
+        const geoCodeResponse = await axios.get(`http://api.openweathermap.org/geo/1.0/direct?q=${city},${countryCode}&limit=1&appid=${OPENWEATHERMAP_API_KEY}`);
+        const { lat, lon } = geoCodeResponse.data[0];
 
-        const response = await axios.get(`http://api.openweathermap.org/data/2.5/weather?units=metric&lat=${lat}&lon=${lng}&appid=${OPENWEATHERMAP_API_KEY}`);
+        const response = await axios.get(`http://api.openweathermap.org/data/2.5/weather?units=metric&lat=${lat}&lon=${lon}&appid=${OPENWEATHERMAP_API_KEY}`);
         const data = response.data;
         res.json({
             success: true,
@@ -37,10 +35,10 @@ router.get('/city/:city/:countyCode', async (req, res) => {
 router.get('/postal/:postalCode/:countryCode', async (req, res) => {
     const { postalCode, countryCode } = req.params;
     try {
-        const geoCodeResponse = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?address=${postalCode},${countryCode}&key=${GEOCODE_GOOGLE_API_KEY}`);
-        const { lat, lng } = geoCodeResponse.data;
+        const geoCodeResponse = await axios.get(`http://api.openweathermap.org/geo/1.0/zip?zip=${postalCode},${countryCode}&appid=${OPENWEATHERMAP_API_KEY}`);
+        const { lat, lon } = geoCodeResponse.data;
 
-        const response = await axios.get(`http://api.openweathermap.org/data/2.5/weather?units=metric&lat=${lat}&lon=${lng}&appid=${OPENWEATHERMAP_API_KEY}`);
+        const response = await axios.get(`http://api.openweathermap.org/data/2.5/weather?units=metric&lat=${lat}&lon=${lon}&appid=${OPENWEATHERMAP_API_KEY}`);
         const data = response.data;
         console.log(data);
         res.json({
